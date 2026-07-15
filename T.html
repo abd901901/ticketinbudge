@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TicketInBudget | Find Budget-Friendly Ticket Prices</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0066ff, #00a8ff);
+      color: white;
+      padding: 22px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #ffe600;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0066ff, #00a8ff);
+      color: white;
+      text-align: center;
+      padding: 55px 20px 110px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 18px;
+    }
+
+    .search-box {
+      max-width: 1050px;
+      margin: -65px auto 40px;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    }
+
+    .trip-types {
+      margin-bottom: 20px;
+    }
+
+    .trip-types label {
+      margin-right: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccd4e0;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    .search-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #0066ff;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .search-btn:hover {
+      background: #004fd1;
+    }
+
+    #results {
+      max-width: 1050px;
+      margin: 30px auto;
+      padding: 20px;
+      display: none;
+    }
+
+    .result-card {
+      background: white;
+      border-radius: 15px;
+      padding: 22px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .price {
+      color: #008a42;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .best {
+      border: 2px solid #00a651;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #00a651;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .notice {
+      background: #fff7d6;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .features {
+      max-width: 1050px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .feature {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+    }
+
+    footer {
+      background: #172033;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 750px) {
+      .grid, .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .result-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Ticket<span>InBudget</span></div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#search">Compare Prices</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Travel Anywhere Within Your Budget</h1>
+  <p>Compare estimated ticket prices from city to city and country to country.</p>
+</section>
+
+<section class="search-box" id="search">
+
+  <div class="trip-types">
+    <label>
+      <input type="radio" name="trip" value="oneway" checked>
+      One Way
+    </label>
+
+    <label>
+      <input type="radio" name="trip" value="return">
+      Return
+    </label>
+  </div>
+
+  <div class="grid">
+
+    <div class="field">
+      <label>From</label>
+      <input id="from" type="text" placeholder="City or country">
+    </div>
+
+    <div class="field">
+      <label>To</label>
+      <input id="to" type="text" placeholder="City or country">
+    </div>
+
+    <div class="field">
+      <label>Travel Date</label>
+      <input id="date" type="date">
+    </div>
+
+    <div class="field">
+      <label>Adults</label>
+      <select id="adults">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Children</label>
+      <select id="children">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Infants</label>
+      <select id="infants">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Maximum Budget</label>
+      <input id="budget" type="number" placeholder="Example: 50000">
+    </div>
+
+    <div class="field">
+      <label>Currency</label>
+      <select id="currency">
+        <option value="PKR">PKR - Pakistani Rupee</option>
+        <option value="USD">USD - US Dollar</option>
+        <option value="GBP">GBP - British Pound</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="AED">AED - UAE Dirham</option>
+        <option value="SAR">SAR - Saudi Riyal</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Transport</label>
+      <select id="transport">
+        <option value="all">All Options</option>
+        <option value="flight">Flight</option>
+        <option value="bus">Bus</option>
+        <option value="train">Train</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button class="search-btn" onclick="findPrices()">
+    🔎 Find Budget-Friendly Prices
+  </button>
+
+</section>
+
+<section id="results"></section>
+
+<section class="features" id="about">
+  <h2>Why TicketInBudget?</h2>
+
+  <div class="features-grid">
+
+    <div class="feature">
+      <h2>💰</h2>
+      <h3>Budget Friendly</h3>
+      <p>See the cheapest estimated travel options first.</p>
+    </div>
+
+    <div class="feature">
+      <h2>🌍</h2>
+      <h3>Worldwide Routes</h3>
+      <p>Search city-to-city and country-to-country routes.</p>
+    </div>
+
+    <div class="feature">
+      <h2>👨‍👩‍👧</h2>
+      <h3>Family Pricing</h3>
+      <p>Calculate estimated prices for adults, children and infants.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 TicketInBudget</p>
+  <p>Price comparison only — TicketInBudget does not sell or book tickets.</p>
+</footer>
+
+<script>
+  function findPrices() {
+
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+
+    const adults =
+      Number(document.getElementById("adults").value);
+
+    const children =
+      Number(document.getElementById("children").value);
+
+    const infants =
+      Number(document.getElementById("infants").value);
+
+    const budget =
+      Number(document.getElementById("budget").value);
+
+    const currency =
+      document.getElementById("currency").value;
+
+    const transport =
+      document.getElementById("transport").value;
+
+    const trip =
+      document.querySelector(
+        'input[name="trip"]:checked'
+      ).value;
+
+    if (!from || !to) {
+      alert("Please enter your starting location and destination.");
+      return;
+    }
+
+    // Demo estimated base prices.
+    // Replace this later with a real travel-price API.
+    let options = [
+      {
+        type: "Bus",
+        icon: "🚌",
+        company: "Budget Bus",
+        basePrice: 2500
+      },
+      {
+        type: "Train",
+        icon: "🚆",
+        company: "Economy Train",
+        basePrice: 4000
+      },
+      {
+        type: "Flight",
+        icon: "✈️",
+        company: "Budget Airline",
+        basePrice: 15000
+      }
+    ];
+
+    if (transport !== "all") {
+      options = options.filter(
+        option =>
+          option.type.toLowerCase() === transport
+      );
+    }
+
+    const returnMultiplier =
+      trip === "return" ? 2 : 1;
+
+    options = options.map(option => {
+
+      // Adult = full price
+      // Child = 75% of adult price
+      // Infant = 15% of adult price
+
+      const total =
+        (
+          option.basePrice * adults +
+          option.basePrice * 0.75 * children +
+          option.basePrice * 0.15 * infants
+        ) * returnMultiplier;
+
+      return {
+        ...option,
+        total: Math.round(total)
+      };
+
+    });
+
+    options.sort((a, b) => a.total - b.total);
+
+    const results =
+      document.getElementById("results");
+
+    results.style.display = "block";
+
+    let html = `
+      <h2>
+        ${from} → ${to}
+      </h2>
+
+      <p style="margin: 10px 0 20px;">
+        ${adults} Adult(s),
+        ${children} Child(ren),
+        ${infants} Infant(s)
+      </p>
+
+      <div class="notice">
+        ⚠️ These are demo estimated prices.
+        Real prices require connection to live travel data APIs.
+        TicketInBudget does not book tickets.
+      </div>
+    `;
+
+    options.forEach((option, index) => {
+
+      const withinBudget =
+        !budget || option.total <= budget;
+
+      html += `
+        <div class="result-card
+          ${index === 0 ? "best" : ""}">
+
+          <div>
+
+            ${
+              index === 0
+              ? '<span class="badge">CHEAPEST OPTION</span>'
+              : ''
+            }
+
+            <h3>
+              ${option.icon}
+              ${option.type}
+            </h3>
+
+            <p>${option.company}</p>
+
+            <p>
+              ${
+                withinBudget
+                ? "✅ Within your budget"
+                : "❌ Over your budget"
+              }
+            </p>
+
+          </div>
+
+          <div class="price">
+            ${currency}
+            ${option.total.toLocaleString()}
+          </div>
+
+        </div>
+      `;
+
+    });
+
+    results.innerHTML = html;
+
+    results.scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+</script>
+
+</body>
+</html>
